@@ -1,8 +1,9 @@
-import 'package:app/src/design/components/text_century.dart';
 import 'package:app/src/design/theme/theme_data.dart';
 import 'package:app/src/routes/local_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
+
+import 'components.dart';
 
 class NavDrawer extends StatefulWidget {
   final PageController pageCtrl;

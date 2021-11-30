@@ -1,6 +1,7 @@
 import 'package:app/src/design/theme/theme_data.dart';
+import 'package:app/src/design/widgets/components.dart';
 import 'package:app/src/design/widgets/drawer.dart';
-import 'package:app/src/design/components/text_century.dart';
+import 'package:app/src/pages/muscular_groups.dart';
 import 'package:app/src/routes/local_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
@@ -51,41 +52,7 @@ class _HomePageState extends State<HomePage> {
         borderRadius: BorderRadius.all(Radius.circular(16)),
       ),
       drawer: NavDrawer(pageCtrl, drawerCtrl),
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-            backgroundColor: Colored.dark,
-            title: Container(
-              width: Window(context).w(100),
-              height: 30,
-              child: TCentury(
-                title,
-                aling: TextAlign.left,
-              ),
-            ),
-            leading: IconButton(
-              onPressed: _handleHomePageButtonPressed,
-              icon: ValueListenableBuilder<AdvancedDrawerValue>(
-                valueListenable: drawerCtrl,
-                builder: (_, value, __) {
-                  return AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 250),
-                    child: Icon(
-                      value.visible ? Icons.clear : Icons.menu,
-                      key: ValueKey<bool>(value.visible),
-                    ),
-                  );
-                },
-              ),
-            )),
-        body: PageView.builder(
-            scrollDirection: Axis.horizontal,
-            controller: pageCtrl,
-            itemCount: LocalData.list_menu.length,
-            itemBuilder: (context, i) {
-              return LocalData.widget[i];
-            }),
-      ),
+      child: MuscularPage(drawerCtrl),
     );
   }
 

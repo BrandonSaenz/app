@@ -1,12 +1,11 @@
 import 'dart:async';
+import 'package:app/src/API/controllers.dart';
+import 'package:app/src/API/models.dart';
 import 'package:app/src/design/widgets/input.dart';
+import 'package:app/src/design/widgets/components.dart';
 import 'package:http/http.dart' as http;
 import 'package:another_flushbar/flushbar.dart';
-import 'package:app/src/design/components/text_century.dart';
 import 'package:app/src/design/theme/theme_data.dart';
-import 'package:app/src/design/widgets/button.dart';
-import 'package:app/src/controllers/users_controller.dart';
-import 'package:app/src/models/users_model.dart';
 import 'package:flutter/material.dart';
 
 class UsersPage extends StatefulWidget {
@@ -23,19 +22,11 @@ class _UsersPageState extends State<UsersPage> {
   String API_update = "http://fenrir.com.mx/users/update.php?";
   String API_delete = "http://fenrir.com.mx/users/delete.php?";
 
-  loadPosts() async {
-    GetFenrirUsers.getListUsers().then((res) async {
-      dataStream.add(res);
-      print('LOAD GET USERS ${res.length}');
-      return res;
-    });
-  }
-
   @override
   void initState() {
     StreamController<List<ModelUsers>> dataStream =
         StreamController<List<ModelUsers>>();
-    loadPosts();
+    reload();
     super.initState();
   }
 
@@ -59,33 +50,9 @@ class _UsersPageState extends State<UsersPage> {
       builder: (BuildContext context, AsyncSnapshot<List> snap) {
         switch (snap.connectionState) {
           case ConnectionState.waiting:
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    width: Window(context).w(20),
-                    height: Window(context).w(20),
-                    margin: EdgeInsets.all(30),
-                    child: CircularProgressIndicator(
-                      backgroundColor: Colors.white,
-                      color: Colored.primary,
-                      strokeWidth: 10,
-                    ),
-                  ),
-                  TCentury('CARGANDO USUARIOS...', fontColor: Colored.primary)
-                ],
-              ),
-            );
+            return ConnectionWaiting();
           case ConnectionState.none:
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [TCentury('SIN DATOS', fontColor: Colored.primary)],
-              ),
-            );
+            return ConnectionNone();
           case ConnectionState.active:
             return Scaffold(
               resizeToAvoidBottomInset: false,
@@ -186,15 +153,7 @@ class _UsersPageState extends State<UsersPage> {
               ),
             );
           case ConnectionState.done:
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  TCentury('CONEXION TERMINADA', fontColor: Colored.primary)
-                ],
-              ),
-            );
+            return ConnectionDone();
         }
       },
     );
@@ -204,7 +163,7 @@ class _UsersPageState extends State<UsersPage> {
     var url = '${API_create}name=${name}&type=${type}';
     final resp = await http.get(Uri.parse(url));
     if (resp.statusCode == 200) {
-      await loadPosts();
+      await reload();
       Navigator.pop(context);
       await Flushbar(
         backgroundColor: Colors.green,
@@ -227,7 +186,7 @@ class _UsersPageState extends State<UsersPage> {
     var url = '${API_update}name=${name}&type=${type}&id=${id}';
     final resp = await http.get(Uri.parse(url));
     if (resp.statusCode == 200) {
-      await loadPosts();
+      await reload();
       Navigator.pop(context);
       await Flushbar(
         backgroundColor: Colors.green,
@@ -250,7 +209,7 @@ class _UsersPageState extends State<UsersPage> {
     var url = '${API_delete}id=${id}';
     final resp = await http.get(Uri.parse(url));
     if (resp.statusCode == 200) {
-      await loadPosts();
+      await reload();
       Navigator.pop(context);
       await Flushbar(
         backgroundColor: Colors.green,

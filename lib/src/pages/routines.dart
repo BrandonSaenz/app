@@ -4,54 +4,43 @@ import 'package:app/src/API/models.dart';
 import 'package:app/src/design/theme/theme_data.dart';
 import 'package:app/src/design/widgets/input.dart';
 import 'package:app/src/design/widgets/components.dart';
-import 'package:app/src/pages/routines.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:http/http.dart' as http;
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 
-class MuscularPage extends StatefulWidget {
-  final AdvancedDrawerController? drawerCtrl;
-  MuscularPage(this.drawerCtrl, {Key? key}) : super(key: key);
+class RoutinesPage extends StatefulWidget {
+  String? id_muscular_groups;
+  RoutinesPage(this.id_muscular_groups, {Key? key}) : super(key: key);
 
   @override
-  _MuscularPageState createState() => _MuscularPageState();
+  _RoutinesPageState createState() => _RoutinesPageState();
 }
 
-class _MuscularPageState extends State<MuscularPage> {
-  final dataStream = StreamController<List<ModelMuscularGroups>>();
+class _RoutinesPageState extends State<RoutinesPage> {
+  final dataStream = StreamController<List<ModelRoutines>>();
+  late String id_muscular_groups;
   AdvancedDrawerController drawerCtrl = AdvancedDrawerController();
 
-  String API_create = "http://fenrir.com.mx/muscular_groups/post.php?";
-  String API_update = "http://fenrir.com.mx/muscular_groups/update.php?";
-  String API_delete = "http://fenrir.com.mx/muscular_groups/delete.php?";
+  String API_create = "http://fenrir.com.mx/routines/post.php?";
+  String API_update = "http://fenrir.com.mx/routines/update.php?";
+  String API_delete = "http://fenrir.com.mx/routines/delete.php?";
 
-  loadPosts() async {
-    GetMuscularGroups.getList().then((res) async {
+  @override
+  void initState() {
+    id_muscular_groups = widget.id_muscular_groups!;
+    StreamController<List<ModelRoutines>> dataStream =
+        StreamController<List<ModelRoutines>>();
+    loadPosts(id_muscular_groups);
+    super.initState();
+  }
+
+  loadPosts(String id_muscular_groups) async {
+    GetRoutines.getList(id_muscular_groups).then((res) async {
       dataStream.add(res);
       print('LOAD GET USERS ${res.length}');
       return res;
     });
-  }
-
-  void _handleHomePageButtonPressed() {
-    drawerCtrl.showDrawer();
-  }
-
-  goRoutines(String id_muscular_groups) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => RoutinesPage(id_muscular_groups)),
-    );
-  }
-
-  @override
-  void initState() {
-    drawerCtrl = widget.drawerCtrl!;
-    StreamController<List<ModelMuscularGroups>> dataStream =
-        StreamController<List<ModelMuscularGroups>>();
-    loadPosts();
-    super.initState();
   }
 
   @override
@@ -70,24 +59,15 @@ class _MuscularPageState extends State<MuscularPage> {
             width: Window(context).w(100),
             height: 30,
             child: TCentury(
-              'MUSCULAR GROUPS',
+              'ROUTINES',
               aling: TextAlign.left,
             ),
           ),
           leading: IconButton(
-            onPressed: _handleHomePageButtonPressed,
-            icon: ValueListenableBuilder<AdvancedDrawerValue>(
-              valueListenable: drawerCtrl,
-              builder: (_, value, __) {
-                return AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 250),
-                  child: Icon(
-                    value.visible ? Icons.clear : Icons.menu,
-                    key: ValueKey<bool>(value.visible),
-                  ),
-                );
-              },
-            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(Icons.arrow_back_ios_sharp),
           )),
       body: StreamBuilder(
         stream: dataStream.stream,
@@ -111,84 +91,76 @@ class _MuscularPageState extends State<MuscularPage> {
                           : ListView.builder(
                               itemCount: snap.data!.length,
                               itemBuilder: (context, index) {
-                                String id_muscular_groups =
-                                    snap.data![index].id;
-                                String name = snap.data![index].name;
-                                return GestureDetector(
-                                  onTap: () => goRoutines(id_muscular_groups),
-                                  child: Container(
-                                    width: Window(context).w(100),
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(5),
-                                        border: Border.all(
-                                            color: Colored.primary,
-                                            width: 1.5)),
-                                    margin: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                                    padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Container(
-                                          padding:
-                                              EdgeInsets.fromLTRB(20, 0, 10, 0),
-                                          child: TCentury(
-                                            name,
-                                            fontColor: Colors.black,
-                                          ),
+                                String id = snap.data![index].id;
+                                String title = snap.data![index].title;
+                                return Container(
+                                  width: Window(context).w(100),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5),
+                                      border: Border.all(
+                                          color: Colored.primary, width: 1.5)),
+                                  margin: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                                  padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                        padding:
+                                            EdgeInsets.fromLTRB(20, 0, 10, 0),
+                                        child: TCentury(
+                                          title,
+                                          fontColor: Colors.black,
                                         ),
-                                        Container(
-                                          width: Window(context).w(30),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Container(
-                                                margin: EdgeInsets.fromLTRB(
-                                                    5, 0, 5, 0),
-                                                width: Window(context).w(12),
-                                                height: Window(context).w(12),
-                                                decoration: BoxDecoration(
-                                                    color: Colored.dark,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10)),
-                                                child: IconButton(
-                                                  onPressed: () => onDelete(
-                                                      context,
-                                                      id_muscular_groups),
-                                                  icon: Icon(
-                                                    Icons.remove,
-                                                    color: Colors.white,
-                                                  ),
+                                      ),
+                                      Container(
+                                        width: Window(context).w(30),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                              margin: EdgeInsets.fromLTRB(
+                                                  5, 0, 5, 0),
+                                              width: Window(context).w(12),
+                                              height: Window(context).w(12),
+                                              decoration: BoxDecoration(
+                                                  color: Colored.dark,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10)),
+                                              child: IconButton(
+                                                onPressed: () =>
+                                                    onDelete(context, id),
+                                                icon: Icon(
+                                                  Icons.remove,
+                                                  color: Colors.white,
                                                 ),
                                               ),
-                                              Container(
-                                                margin: EdgeInsets.fromLTRB(
-                                                    5, 0, 5, 0),
-                                                width: Window(context).w(12),
-                                                height: Window(context).w(12),
-                                                decoration: BoxDecoration(
-                                                    color: Colored.dark,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10)),
-                                                child: IconButton(
-                                                  onPressed: () => onUpdate(
-                                                      context,
-                                                      id_muscular_groups,
-                                                      name),
-                                                  icon: Icon(
-                                                    Icons.edit,
-                                                    color: Colors.white,
-                                                  ),
+                                            ),
+                                            Container(
+                                              margin: EdgeInsets.fromLTRB(
+                                                  5, 0, 5, 0),
+                                              width: Window(context).w(12),
+                                              height: Window(context).w(12),
+                                              decoration: BoxDecoration(
+                                                  color: Colored.dark,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10)),
+                                              child: IconButton(
+                                                onPressed: () => onUpdate(
+                                                    context, id, title),
+                                                icon: Icon(
+                                                  Icons.edit,
+                                                  color: Colors.white,
                                                 ),
-                                              )
-                                            ],
-                                          ),
-                                        )
-                                      ],
-                                    ),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      )
+                                    ],
                                   ),
                                 );
                               },
@@ -213,8 +185,8 @@ class _MuscularPageState extends State<MuscularPage> {
     );
   }
 
-  Future apiCreate(String name, String type) async {
-    var url = '${API_create}name=${name}&type=${type}';
+  Future apiCreate(String title, description) async {
+    var url = '${API_create}title=${title}&description=${description}';
     final resp = await http.get(Uri.parse(url));
     if (resp.statusCode == 200) {
       Navigator.pop(context);
@@ -235,11 +207,11 @@ class _MuscularPageState extends State<MuscularPage> {
     }
   }
 
-  Future apiUpdate(String id, name) async {
-    var url = '${API_update}name=${name}&id=${id}';
+  Future apiUpdate(String id, title) async {
+    var url = '${API_update}id=${id}&id=${title}';
     final resp = await http.get(Uri.parse(url));
     if (resp.statusCode == 200) {
-      await loadPosts();
+      await loadPosts(id_muscular_groups);
       Navigator.pop(context);
       await Flushbar(
         backgroundColor: Colors.green,
@@ -262,7 +234,7 @@ class _MuscularPageState extends State<MuscularPage> {
     var url = '${API_delete}id=${id}';
     final resp = await http.get(Uri.parse(url));
     if (resp.statusCode == 200) {
-      await loadPosts();
+      await loadPosts(id_muscular_groups);
       Navigator.pop(context);
       await Flushbar(
         backgroundColor: Colors.green,
@@ -282,8 +254,8 @@ class _MuscularPageState extends State<MuscularPage> {
   }
 
   void onCreate(BuildContext context) async {
-    TextEditingController nameCtrl = TextEditingController();
-    TextEditingController typeCtrl = TextEditingController();
+    TextEditingController titleCtrl = TextEditingController();
+    TextEditingController descriptionCtrl = TextEditingController();
 
     showModalBottomSheet(
         useRootNavigator: false,
@@ -310,16 +282,21 @@ class _MuscularPageState extends State<MuscularPage> {
                   child: Column(
                     children: [
                       Field(
-                        nameCtrl,
-                        hint: 'Ingresar nombre',
-                        label: 'Nombre',
+                        titleCtrl,
+                        hint: 'Ingresar titulo',
+                        label: 'Titulo',
+                      ),
+                      Field(
+                        descriptionCtrl,
+                        hint: 'Ingresar descripcion',
+                        label: 'Descripcion',
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           TextButton(
-                              onPressed: () =>
-                                  apiCreate(nameCtrl.text, typeCtrl.text),
+                              onPressed: () => apiCreate(
+                                  titleCtrl.text, descriptionCtrl.text),
                               child: Button('CREAR')),
                           TextButton(
                               onPressed: () {
@@ -337,11 +314,9 @@ class _MuscularPageState extends State<MuscularPage> {
         });
   }
 
-  void onUpdate(BuildContext context, String id, name) async {
-    TextEditingController nameCtrl = TextEditingController();
-    TextEditingController typeCtrl = TextEditingController();
-
-    nameCtrl.text = name;
+  void onUpdate(BuildContext context, String id, title) async {
+    TextEditingController titleCtrl = TextEditingController();
+    titleCtrl.text = title;
 
     showModalBottomSheet(
         useRootNavigator: false,
@@ -368,15 +343,15 @@ class _MuscularPageState extends State<MuscularPage> {
                   child: Column(
                     children: [
                       Field(
-                        nameCtrl,
-                        hint: 'Ingresar nombre',
-                        label: 'Nombre',
+                        titleCtrl,
+                        hint: 'Ingresar titulo',
+                        label: 'Titulo',
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           TextButton(
-                              onPressed: () => apiUpdate(id, nameCtrl.text),
+                              onPressed: () => apiUpdate(id, titleCtrl.text),
                               child: Button('ACTUALIZAR')),
                           TextButton(
                               onPressed: () {
