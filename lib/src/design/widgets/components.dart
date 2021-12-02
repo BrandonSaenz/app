@@ -13,6 +13,7 @@ class TCentury extends StatelessWidget {
     return Text(
       data,
       textAlign: aling != null ? aling : TextAlign.center,
+      overflow: TextOverflow.clip,
       style: TextStyle(
           color: fontColor != null ? fontColor : Colors.white,
           fontSize: 20,
@@ -56,7 +57,7 @@ class ConnectionWaiting extends StatelessWidget {
               strokeWidth: 10,
             ),
           ),
-          TCentury('CARGANDO USUARIOS...', fontColor: Colored.primary)
+          TCentury('CARGANDO ...', fontColor: Colored.primary)
         ],
       ),
     );

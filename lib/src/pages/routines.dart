@@ -93,6 +93,11 @@ class _RoutinesPageState extends State<RoutinesPage> {
                               itemBuilder: (context, index) {
                                 String id = snap.data![index].id;
                                 String title = snap.data![index].title;
+                                String description =
+                                    snap.data![index].description;
+                                String num_circuitos =
+                                    snap.data![index].num_circuitos;
+
                                 return Container(
                                   width: Window(context).w(100),
                                   decoration: BoxDecoration(
@@ -106,10 +111,13 @@ class _RoutinesPageState extends State<RoutinesPage> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Container(
-                                        padding:
-                                            EdgeInsets.fromLTRB(20, 0, 10, 0),
+                                        width: Window(context).w(50),
+                                        height: Window(context).w(14),
+                                        margin:
+                                            EdgeInsets.fromLTRB(20, 0, 0, 0),
                                         child: TCentury(
                                           title,
+                                          aling: TextAlign.left,
                                           fontColor: Colors.black,
                                         ),
                                       ),
@@ -150,7 +158,11 @@ class _RoutinesPageState extends State<RoutinesPage> {
                                                           10)),
                                               child: IconButton(
                                                 onPressed: () => onUpdate(
-                                                    context, id, title),
+                                                    context,
+                                                    id,
+                                                    title,
+                                                    description,
+                                                    num_circuitos),
                                                 icon: Icon(
                                                   Icons.edit,
                                                   color: Colors.white,
@@ -185,10 +197,12 @@ class _RoutinesPageState extends State<RoutinesPage> {
     );
   }
 
-  Future apiCreate(String title, description) async {
-    var url = '${API_create}title=${title}&description=${description}';
+  Future apiCreate(String title, description, num_circuitos) async {
+    var url =
+        '${API_create}&title=${title}&description=${description}&num_circuitos=${num_circuitos}&id_muscular_groups=${id_muscular_groups}';
     final resp = await http.get(Uri.parse(url));
     if (resp.statusCode == 200) {
+      await loadPosts(id_muscular_groups);
       Navigator.pop(context);
       await Flushbar(
         backgroundColor: Colors.green,
@@ -197,6 +211,7 @@ class _RoutinesPageState extends State<RoutinesPage> {
         duration: Duration(seconds: 2),
       ).show(context);
     } else {
+      await loadPosts(id_muscular_groups);
       Navigator.pop(context);
       await Flushbar(
         backgroundColor: Colors.red,
@@ -207,8 +222,9 @@ class _RoutinesPageState extends State<RoutinesPage> {
     }
   }
 
-  Future apiUpdate(String id, title) async {
-    var url = '${API_update}id=${id}&id=${title}';
+  Future apiUpdate(String id, title, description, num_circuitos) async {
+    var url =
+        '${API_update}id=${id}&title=${title}&description=${description}&num_circuitos=${num_circuitos}&id_muscular_groups=${id_muscular_groups}';
     final resp = await http.get(Uri.parse(url));
     if (resp.statusCode == 200) {
       await loadPosts(id_muscular_groups);
@@ -256,6 +272,7 @@ class _RoutinesPageState extends State<RoutinesPage> {
   void onCreate(BuildContext context) async {
     TextEditingController titleCtrl = TextEditingController();
     TextEditingController descriptionCtrl = TextEditingController();
+    TextEditingController circuitosCtrl = TextEditingController();
 
     showModalBottomSheet(
         useRootNavigator: false,
@@ -281,22 +298,35 @@ class _RoutinesPageState extends State<RoutinesPage> {
                 Container(
                   child: Column(
                     children: [
-                      Field(
-                        titleCtrl,
-                        hint: 'Ingresar titulo',
-                        label: 'Titulo',
-                      ),
-                      Field(
-                        descriptionCtrl,
-                        hint: 'Ingresar descripcion',
-                        label: 'Descripcion',
+                      Container(
+                        width: Window(context).w(100),
+                        height: Window(context).h(30),
+                        child: ListView(
+                          children: [
+                            Field(
+                              titleCtrl,
+                              hint: 'Ingresar titulo',
+                              label: 'Titulo',
+                            ),
+                            Field(
+                              descriptionCtrl,
+                              hint: 'Ingresar descripcion',
+                              label: 'Descripcion',
+                            ),
+                            Field(
+                              circuitosCtrl,
+                              hint: 'N Circuitos',
+                              label: 'Cantidad de circuitos',
+                            )
+                          ],
+                        ),
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           TextButton(
-                              onPressed: () => apiCreate(
-                                  titleCtrl.text, descriptionCtrl.text),
+                              onPressed: () => apiCreate(titleCtrl.text,
+                                  descriptionCtrl.text, circuitosCtrl.text),
                               child: Button('CREAR')),
                           TextButton(
                               onPressed: () {
@@ -314,10 +344,15 @@ class _RoutinesPageState extends State<RoutinesPage> {
         });
   }
 
-  void onUpdate(BuildContext context, String id, title) async {
+  void onUpdate(
+      BuildContext context, String id, title, description, circuitos) async {
     TextEditingController titleCtrl = TextEditingController();
-    titleCtrl.text = title;
+    TextEditingController descriptionCtrl = TextEditingController();
+    TextEditingController circuitosCtrl = TextEditingController();
 
+    titleCtrl.text = title;
+    descriptionCtrl.text = description;
+    circuitosCtrl.text = circuitos;
     showModalBottomSheet(
         useRootNavigator: false,
         context: context,
@@ -347,11 +382,22 @@ class _RoutinesPageState extends State<RoutinesPage> {
                         hint: 'Ingresar titulo',
                         label: 'Titulo',
                       ),
+                      Field(
+                        descriptionCtrl,
+                        hint: 'Ingresar descripcion',
+                        label: 'Descripcion',
+                      ),
+                      Field(
+                        circuitosCtrl,
+                        hint: 'N Circuitos',
+                        label: 'Cantidad de circuitos',
+                      ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           TextButton(
-                              onPressed: () => apiUpdate(id, titleCtrl.text),
+                              onPressed: () => apiUpdate(id, titleCtrl.text,
+                                  descriptionCtrl.text, circuitosCtrl.text),
                               child: Button('ACTUALIZAR')),
                           TextButton(
                               onPressed: () {

@@ -25,7 +25,7 @@ class _FieldState extends State<Field> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.fromLTRB(0, 30, 0, 30),
+      padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
       child: TextField(
         controller: controller,
         style: TextStyle(
