@@ -98,83 +98,100 @@ class _RoutinesPageState extends State<RoutinesPage> {
                                 String num_circuitos =
                                     snap.data![index].num_circuitos;
 
-                                return Container(
-                                  width: Window(context).w(100),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5),
-                                      border: Border.all(
-                                          color: Colored.primary, width: 1.5)),
-                                  margin: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                                  padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Container(
-                                        width: Window(context).w(50),
-                                        height: Window(context).w(14),
+                                return title != 'null'
+                                    ? Container(
+                                        width: Window(context).w(100),
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            border: Border.all(
+                                                color: Colored.primary,
+                                                width: 1.5)),
                                         margin:
-                                            EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                        child: TCentury(
-                                          title,
-                                          aling: TextAlign.left,
-                                          fontColor: Colors.black,
-                                        ),
-                                      ),
-                                      Container(
-                                        width: Window(context).w(30),
+                                            EdgeInsets.fromLTRB(20, 5, 20, 5),
+                                        padding:
+                                            EdgeInsets.fromLTRB(0, 10, 0, 10),
                                         child: Row(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             Container(
+                                              width: Window(context).w(50),
+                                              height: Window(context).w(14),
                                               margin: EdgeInsets.fromLTRB(
-                                                  5, 0, 5, 0),
-                                              width: Window(context).w(12),
-                                              height: Window(context).w(12),
-                                              decoration: BoxDecoration(
-                                                  color: Colored.dark,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10)),
-                                              child: IconButton(
-                                                onPressed: () =>
-                                                    onDelete(context, id),
-                                                icon: Icon(
-                                                  Icons.remove,
-                                                  color: Colors.white,
-                                                ),
+                                                  20, 0, 0, 0),
+                                              child: TCentury(
+                                                title,
+                                                aling: TextAlign.left,
+                                                fontColor: Colors.black,
                                               ),
                                             ),
                                             Container(
-                                              margin: EdgeInsets.fromLTRB(
-                                                  5, 0, 5, 0),
-                                              width: Window(context).w(12),
-                                              height: Window(context).w(12),
-                                              decoration: BoxDecoration(
-                                                  color: Colored.dark,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10)),
-                                              child: IconButton(
-                                                onPressed: () => onUpdate(
-                                                    context,
-                                                    id,
-                                                    title,
-                                                    description,
-                                                    num_circuitos),
-                                                icon: Icon(
-                                                  Icons.edit,
-                                                  color: Colors.white,
-                                                ),
+                                              width: Window(context).w(30),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Container(
+                                                    margin: EdgeInsets.fromLTRB(
+                                                        5, 0, 5, 0),
+                                                    width:
+                                                        Window(context).w(12),
+                                                    height:
+                                                        Window(context).w(12),
+                                                    decoration: BoxDecoration(
+                                                        color: Colored.dark,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10)),
+                                                    child: IconButton(
+                                                      onPressed: () =>
+                                                          onDelete(context, id),
+                                                      icon: Icon(
+                                                        Icons.remove,
+                                                        color: Colors.white,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    margin: EdgeInsets.fromLTRB(
+                                                        5, 0, 5, 0),
+                                                    width:
+                                                        Window(context).w(12),
+                                                    height:
+                                                        Window(context).w(12),
+                                                    decoration: BoxDecoration(
+                                                        color: Colored.dark,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10)),
+                                                    child: IconButton(
+                                                      onPressed: () => onUpdate(
+                                                          context,
+                                                          id,
+                                                          title,
+                                                          description,
+                                                          num_circuitos),
+                                                      icon: Icon(
+                                                        Icons.edit,
+                                                        color: Colors.white,
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
                                               ),
                                             )
                                           ],
                                         ),
                                       )
-                                    ],
-                                  ),
-                                );
+                                    : Container(
+                                        width: Window(context).w(100),
+                                        height: Window(context).h(70),
+                                        child: Center(
+                                          child: TCentury('SIN REGISTROS',
+                                              fontColor: Colored.primary),
+                                        ),
+                                      );
                               },
                             ),
                     ),

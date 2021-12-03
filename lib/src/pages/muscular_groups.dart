@@ -114,83 +114,104 @@ class _MuscularPageState extends State<MuscularPage> {
                                 String id_muscular_groups =
                                     snap.data![index].id;
                                 String name = snap.data![index].name;
-                                return GestureDetector(
-                                  onTap: () => goRoutines(id_muscular_groups),
-                                  child: Container(
-                                    width: Window(context).w(100),
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(5),
-                                        border: Border.all(
-                                            color: Colored.primary,
-                                            width: 1.5)),
-                                    margin: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                                    padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Container(
+                                return name != 'null'
+                                    ? GestureDetector(
+                                        onTap: () =>
+                                            goRoutines(id_muscular_groups),
+                                        child: Container(
+                                          width: Window(context).w(100),
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                              border: Border.all(
+                                                  color: Colored.primary,
+                                                  width: 1.5)),
+                                          margin:
+                                              EdgeInsets.fromLTRB(20, 5, 20, 5),
                                           padding:
-                                              EdgeInsets.fromLTRB(20, 0, 10, 0),
-                                          child: TCentury(
-                                            name,
-                                            fontColor: Colors.black,
-                                          ),
-                                        ),
-                                        Container(
-                                          width: Window(context).w(30),
+                                              EdgeInsets.fromLTRB(0, 10, 0, 10),
                                           child: Row(
                                             mainAxisAlignment:
-                                                MainAxisAlignment.center,
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
                                               Container(
-                                                margin: EdgeInsets.fromLTRB(
-                                                    5, 0, 5, 0),
-                                                width: Window(context).w(12),
-                                                height: Window(context).w(12),
-                                                decoration: BoxDecoration(
-                                                    color: Colored.dark,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10)),
-                                                child: IconButton(
-                                                  onPressed: () => onDelete(
-                                                      context,
-                                                      id_muscular_groups),
-                                                  icon: Icon(
-                                                    Icons.remove,
-                                                    color: Colors.white,
-                                                  ),
+                                                padding: EdgeInsets.fromLTRB(
+                                                    20, 0, 10, 0),
+                                                child: TCentury(
+                                                  name,
+                                                  fontColor: Colors.black,
                                                 ),
                                               ),
                                               Container(
-                                                margin: EdgeInsets.fromLTRB(
-                                                    5, 0, 5, 0),
-                                                width: Window(context).w(12),
-                                                height: Window(context).w(12),
-                                                decoration: BoxDecoration(
-                                                    color: Colored.dark,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10)),
-                                                child: IconButton(
-                                                  onPressed: () => onUpdate(
-                                                      context,
-                                                      id_muscular_groups,
-                                                      name),
-                                                  icon: Icon(
-                                                    Icons.edit,
-                                                    color: Colors.white,
-                                                  ),
+                                                width: Window(context).w(30),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Container(
+                                                      margin:
+                                                          EdgeInsets.fromLTRB(
+                                                              5, 0, 5, 0),
+                                                      width:
+                                                          Window(context).w(12),
+                                                      height:
+                                                          Window(context).w(12),
+                                                      decoration: BoxDecoration(
+                                                          color: Colored.dark,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      10)),
+                                                      child: IconButton(
+                                                        onPressed: () => onDelete(
+                                                            context,
+                                                            id_muscular_groups),
+                                                        icon: Icon(
+                                                          Icons.remove,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      margin:
+                                                          EdgeInsets.fromLTRB(
+                                                              5, 0, 5, 0),
+                                                      width:
+                                                          Window(context).w(12),
+                                                      height:
+                                                          Window(context).w(12),
+                                                      decoration: BoxDecoration(
+                                                          color: Colored.dark,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      10)),
+                                                      child: IconButton(
+                                                        onPressed: () => onUpdate(
+                                                            context,
+                                                            id_muscular_groups,
+                                                            name),
+                                                        icon: Icon(
+                                                          Icons.edit,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
                                                 ),
                                               )
                                             ],
                                           ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                );
+                                        ),
+                                      )
+                                    : Container(
+                                        width: Window(context).w(100),
+                                        height: Window(context).h(70),
+                                        child: Center(
+                                          child: TCentury('SIN REGISTROS',
+                                              fontColor: Colored.primary),
+                                        ),
+                                      );
                               },
                             ),
                     ),
@@ -217,6 +238,7 @@ class _MuscularPageState extends State<MuscularPage> {
     var url = '${API_create}name=${name}&type=${type}';
     final resp = await http.get(Uri.parse(url));
     if (resp.statusCode == 200) {
+      await loadPosts();
       Navigator.pop(context);
       await Flushbar(
         backgroundColor: Colors.green,
@@ -225,6 +247,7 @@ class _MuscularPageState extends State<MuscularPage> {
         duration: Duration(seconds: 2),
       ).show(context);
     } else {
+      await loadPosts();
       Navigator.pop(context);
       await Flushbar(
         backgroundColor: Colors.red,
@@ -248,6 +271,7 @@ class _MuscularPageState extends State<MuscularPage> {
         duration: Duration(seconds: 2),
       ).show(context);
     } else {
+      await loadPosts();
       Navigator.pop(context);
       await Flushbar(
         backgroundColor: Colors.red,
@@ -271,6 +295,7 @@ class _MuscularPageState extends State<MuscularPage> {
         duration: Duration(seconds: 2),
       ).show(context);
     } else {
+      await loadPosts();
       Navigator.pop(context);
       await Flushbar(
         backgroundColor: Colors.red,
