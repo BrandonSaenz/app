@@ -87,7 +87,7 @@ class _RoutinesPageState extends State<RoutinesPage> {
                       height: Window(context).h(75),
                       padding: EdgeInsets.fromLTRB(0, 0, 0, 30),
                       child: snap.data!.length == 0
-                          ? TCentury('SIN REGISTOS', fontColor: Colored.primary)
+                          ? TCentury('SIN REGISTOS')
                           : ListView.builder(
                               itemCount: snap.data!.length,
                               itemBuilder: (context, index) {
@@ -120,11 +120,8 @@ class _RoutinesPageState extends State<RoutinesPage> {
                                               height: Window(context).w(14),
                                               margin: EdgeInsets.fromLTRB(
                                                   20, 0, 0, 0),
-                                              child: TCentury(
-                                                title,
-                                                aling: TextAlign.left,
-                                                fontColor: Colors.black,
-                                              ),
+                                              child: TCentury(title,
+                                                  aling: TextAlign.left),
                                             ),
                                             Container(
                                               width: Window(context).w(30),
@@ -188,8 +185,7 @@ class _RoutinesPageState extends State<RoutinesPage> {
                                         width: Window(context).w(100),
                                         height: Window(context).h(70),
                                         child: Center(
-                                          child: TCentury('SIN REGISTROS',
-                                              fontColor: Colored.primary),
+                                          child: TCentury('SIN REGISTROS'),
                                         ),
                                       );
                               },
@@ -307,10 +303,7 @@ class _RoutinesPageState extends State<RoutinesPage> {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 ListTile(
-                  title: TCentury(
-                    'Crear registro',
-                    fontColor: Colored.primary,
-                  ),
+                  title: TCentury('Crear registro'),
                 ),
                 Container(
                   child: Column(
@@ -386,10 +379,7 @@ class _RoutinesPageState extends State<RoutinesPage> {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 ListTile(
-                  title: TCentury(
-                    'Editar registro',
-                    fontColor: Colored.primary,
-                  ),
+                  title: TCentury('Editar registro'),
                 ),
                 Container(
                   child: Column(
@@ -448,10 +438,7 @@ class _RoutinesPageState extends State<RoutinesPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 ListTile(
-                  title: TCentury(
-                    '¿Desea eliminar el registro?',
-                    fontColor: Colored.primary,
-                  ),
+                  title: TCentury('¿Desea eliminar el registro?'),
                 ),
                 Container(
                   child: Row(

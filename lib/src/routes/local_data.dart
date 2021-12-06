@@ -3,5 +3,5 @@ import 'package:app/src/pages/routines.dart';
 import 'package:flutter/material.dart';
 
 class LocalData {
-  static const List<String> list_menu = ['GRUPOS MUSCULARES', 'RUTINAS'];
+  static const List<String> list_menu = ['HOME'];
 }

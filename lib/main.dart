@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'FENRIR',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(primaryColor: Colored.primary),
+      theme: ThemeData(primaryColor: Colored.dark),
       initialRoute: '/',
       routes: getAplicationRoutes(),
     );

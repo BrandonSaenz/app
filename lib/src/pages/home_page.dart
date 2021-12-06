@@ -41,7 +41,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return AdvancedDrawer(
-      backdropColor: Colored.primary,
+      backdropColor: Colored.dark,
       controller: drawerCtrl,
       animationCurve: Curves.easeInOut,
       animationDuration: const Duration(milliseconds: 300),

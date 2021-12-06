@@ -64,31 +64,32 @@ class _MuscularPageState extends State<MuscularPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-          backgroundColor: Colored.dark,
-          title: Container(
-            width: Window(context).w(100),
-            height: 30,
-            child: TCentury(
-              'MUSCULAR GROUPS',
-              aling: TextAlign.left,
-            ),
-          ),
-          leading: IconButton(
-            onPressed: _handleHomePageButtonPressed,
-            icon: ValueListenableBuilder<AdvancedDrawerValue>(
-              valueListenable: drawerCtrl,
-              builder: (_, value, __) {
-                return AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 250),
-                  child: Icon(
-                    value.visible ? Icons.clear : Icons.menu,
-                    key: ValueKey<bool>(value.visible),
-                  ),
-                );
-              },
-            ),
-          )),
+      backgroundColor: Colored.black,
+      // appBar: AppBar(
+      //     backgroundColor: Colored.primary,
+      //     title: Container(
+      //       width: Window(context).w(100),
+      //       height: 30,
+      //       child: TCentury(
+      //         'MUSCULAR GROUPS',
+      //         aling: TextAlign.left,
+      //       ),
+      //     ),
+      //     leading: IconButton(
+      //       onPressed: _handleHomePageButtonPressed,
+      //       icon: ValueListenableBuilder<AdvancedDrawerValue>(
+      //         valueListenable: drawerCtrl,
+      //         builder: (_, value, __) {
+      //           return AnimatedSwitcher(
+      //             duration: const Duration(milliseconds: 250),
+      //             child: Icon(
+      //               value.visible ? Icons.clear : Icons.menu,
+      //               key: ValueKey<bool>(value.visible),
+      //             ),
+      //           );
+      //         },
+      //       ),
+      //     )),
       body: StreamBuilder(
         stream: dataStream.stream,
         builder: (BuildContext context, AsyncSnapshot<List> snap) {
@@ -100,6 +101,7 @@ class _MuscularPageState extends State<MuscularPage> {
             case ConnectionState.active:
               return Scaffold(
                 resizeToAvoidBottomInset: false,
+                backgroundColor: Colored.black,
                 body: Column(
                   children: [
                     Container(
@@ -107,7 +109,7 @@ class _MuscularPageState extends State<MuscularPage> {
                       height: Window(context).h(75),
                       padding: EdgeInsets.fromLTRB(0, 0, 0, 30),
                       child: snap.data!.length == 0
-                          ? TCentury('SIN REGISTOS', fontColor: Colored.primary)
+                          ? TCentury('SIN REGISTOS')
                           : ListView.builder(
                               itemCount: snap.data!.length,
                               itemBuilder: (context, index) {
@@ -115,101 +117,12 @@ class _MuscularPageState extends State<MuscularPage> {
                                     snap.data![index].id;
                                 String name = snap.data![index].name;
                                 return name != 'null'
-                                    ? GestureDetector(
-                                        onTap: () =>
-                                            goRoutines(id_muscular_groups),
-                                        child: Container(
-                                          width: Window(context).w(100),
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(5),
-                                              border: Border.all(
-                                                  color: Colored.primary,
-                                                  width: 1.5)),
-                                          margin:
-                                              EdgeInsets.fromLTRB(20, 5, 20, 5),
-                                          padding:
-                                              EdgeInsets.fromLTRB(0, 10, 0, 10),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Container(
-                                                padding: EdgeInsets.fromLTRB(
-                                                    20, 0, 10, 0),
-                                                child: TCentury(
-                                                  name,
-                                                  fontColor: Colors.black,
-                                                ),
-                                              ),
-                                              Container(
-                                                width: Window(context).w(30),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Container(
-                                                      margin:
-                                                          EdgeInsets.fromLTRB(
-                                                              5, 0, 5, 0),
-                                                      width:
-                                                          Window(context).w(12),
-                                                      height:
-                                                          Window(context).w(12),
-                                                      decoration: BoxDecoration(
-                                                          color: Colored.dark,
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      10)),
-                                                      child: IconButton(
-                                                        onPressed: () => onDelete(
-                                                            context,
-                                                            id_muscular_groups),
-                                                        icon: Icon(
-                                                          Icons.remove,
-                                                          color: Colors.white,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Container(
-                                                      margin:
-                                                          EdgeInsets.fromLTRB(
-                                                              5, 0, 5, 0),
-                                                      width:
-                                                          Window(context).w(12),
-                                                      height:
-                                                          Window(context).w(12),
-                                                      decoration: BoxDecoration(
-                                                          color: Colored.dark,
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      10)),
-                                                      child: IconButton(
-                                                        onPressed: () => onUpdate(
-                                                            context,
-                                                            id_muscular_groups,
-                                                            name),
-                                                        icon: Icon(
-                                                          Icons.edit,
-                                                          color: Colors.white,
-                                                        ),
-                                                      ),
-                                                    )
-                                                  ],
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      )
+                                    ? muscule_group(name, id_muscular_groups)
                                     : Container(
                                         width: Window(context).w(100),
                                         height: Window(context).h(70),
                                         child: Center(
-                                          child: TCentury('SIN REGISTROS',
-                                              fontColor: Colored.primary),
+                                          child: TCentury('SIN REGISTROS'),
                                         ),
                                       );
                               },
@@ -230,6 +143,67 @@ class _MuscularPageState extends State<MuscularPage> {
               return ConnectionDone();
           }
         },
+      ),
+    );
+  }
+
+  Widget muscule_group(String name, id_muscular_groups) {
+    return GestureDetector(
+      onTap: () => goRoutines(id_muscular_groups),
+      child: Container(
+        width: Window(context).w(100),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5), color: Colored.dark),
+        margin: EdgeInsets.fromLTRB(20, 5, 20, 5),
+        padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              padding: EdgeInsets.fromLTRB(20, 0, 10, 0),
+              child: TCentury(name),
+            ),
+            // Container(
+            //   width: Window(context).w(30),
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.center,
+            //     children: [
+            //       Container(
+            //         margin: EdgeInsets.fromLTRB(5, 0, 5, 0),
+            //         width: Window(context).w(12),
+            //         height: Window(context).w(12),
+            //         decoration: BoxDecoration(
+            //             color: Colored.dark,
+            //             borderRadius: BorderRadius.circular(10)),
+            //         child: IconButton(
+            //           onPressed: () => onDelete(context, id_muscular_groups),
+            //           icon: Icon(
+            //             Icons.remove,
+            //             color: Colors.white,
+            //           ),
+            //         ),
+            //       ),
+            //       Container(
+            //         margin: EdgeInsets.fromLTRB(5, 0, 5, 0),
+            //         width: Window(context).w(12),
+            //         height: Window(context).w(12),
+            //         decoration: BoxDecoration(
+            //             color: Colored.dark,
+            //             borderRadius: BorderRadius.circular(10)),
+            //         child: IconButton(
+            //           onPressed: () =>
+            //               onUpdate(context, id_muscular_groups, name),
+            //           icon: Icon(
+            //             Icons.edit,
+            //             color: Colors.white,
+            //           ),
+            //         ),
+            //       )
+            //     ],
+            //   ),
+            // )
+          ],
+        ),
       ),
     );
   }
@@ -326,10 +300,7 @@ class _MuscularPageState extends State<MuscularPage> {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 ListTile(
-                  title: TCentury(
-                    'Crear registro',
-                    fontColor: Colored.primary,
-                  ),
+                  title: TCentury('Crear registro'),
                 ),
                 Container(
                   child: Column(
@@ -384,10 +355,7 @@ class _MuscularPageState extends State<MuscularPage> {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 ListTile(
-                  title: TCentury(
-                    'Editar registro',
-                    fontColor: Colored.primary,
-                  ),
+                  title: TCentury('Editar registro'),
                 ),
                 Container(
                   child: Column(
@@ -435,10 +403,7 @@ class _MuscularPageState extends State<MuscularPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 ListTile(
-                  title: TCentury(
-                    '¿Desea eliminar el registro?',
-                    fontColor: Colored.primary,
-                  ),
+                  title: TCentury('¿Desea eliminar el registro?'),
                 ),
                 Container(
                   child: Row(
